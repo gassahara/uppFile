@@ -1,0 +1,91 @@
+# File Upload Service - Developer Documentation
+
+This document provides detailed information about the functions and implementation of the file upload service.
+
+## Main Function: `handleFileUpload`
+
+This is the main handler function for the file upload endpoint. It processes POST requests with multipart form data.
+
+### Process Flow:
+1. Parses the multipart form data
+2. Validates required fields
+3. Retrieves the public key from Google Cloud Storage
+4. Uploads the content and signature files to Google Cloud Storage
+5. Verifies the content signature
+6. Verifies the timestamp signature
+7. Saves the verified content to Google Cloud Storage
+8. Sends appropriate response based on the outcome
+
+## Helper Functions
+
+### `getPublicKey()`
+
+Retrieves the public key from Google Cloud Storage.
+
+- **Returns**: Promise<string> - The public key as a string
+
+### `minus(mins: number)`
+
+Calculates a timestamp in the past.
+
+- **Parameters**: 
+  - `mins`: number of minutes to subtract from the current time
+- **Returns**: string - Formatted ISO timestamp
+
+### `verifySignature(content: string, signature: Buffer, publicKey: string)`
+
+Verifies a digital signature.
+
+- **Parameters**:
+  - `content`: The content to verify
+  - `signature`: The signature as a Buffer
+  - `publicKey`: The public key to use for verification
+- **Returns**: Promise<boolean> - True if the signature is valid
+
+### `parseMultipartForm(req: IncomingMessage)`
+
+Parses multipart form data from the request.
+
+- **Parameters**:
+  - `req`: The incoming HTTP request
+- **Returns**: Promise<{ fields: any, files: any }> - Parsed form fields and files
+
+## Environment Setup
+
+The service uses the following environment variables:
+- Google Cloud credentials (implicitly used by the Storage client)
+- `GOOGLE_CLOUD_PROJECT` (assumed, for project configuration)
+
+## Dependencies
+
+- `@google-cloud/storage`: For interacting with Google Cloud Storage
+- `fs`: For file system operations
+- `crypto`: For cryptographic operations
+- `http`: For handling HTTP requests and responses
+- `querystring`: For parsing query strings (not used in the provided code)
+- `dotenv`: For loading environment variables (imported but not used in the provided code)
+
+## Error Handling
+
+The service includes error handling for various scenarios:
+- Missing form fields
+- Signature verification failures
+- File upload errors
+- Server-side errors
+
+Errors are returned as JSON responses with appropriate HTTP status codes.
+
+## Security Considerations
+
+- Ensure that the Google Cloud Storage bucket permissions are properly configured.
+- Regularly rotate the public key used for signature verification.
+- Monitor and limit the size of uploaded files to prevent abuse.
+- Implement rate limiting to prevent abuse of the endpoint.
+- Consider adding additional authentication mechanisms for the upload endpoint.
+
+## Future Improvements
+
+- Implement logging for better traceability and debugging.
+- Add unit tests for individual functions.
+- Consider using a more robust file upload library for handling larger files.
+- Implement a cleanup mechanism for temporary files in case of errors.
