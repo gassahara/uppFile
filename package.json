@@ -1,0 +1,22 @@
+{
+  "name": "hello-world-function",
+  "version": "1.0.0",
+  "description": "Cloud Function that returns HTML response",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.0",
+    "typescript": "^5.1.6"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^7.12.0",
+    "dotenv": "^16.4.5",
+    "ts-node": "^10.9.2"
+  }
+}
